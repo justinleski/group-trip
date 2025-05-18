@@ -1,24 +1,15 @@
 const { Router } = require("express");
 const signUpRouter = Router();
+const {
+	renderSignupForm,
+	validateUser,
+	handleSignUp,
+} = require("../controllers/signUpController");
 
-signUpRouter.get("/", (req, res) => {
-    res.render("signUp", { title: "Sign Up" })
-});
+// GET form
+signUpRouter.get("/", renderSignupForm);
 
-signUpRouter.post("/", async (req, res) => {
-
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        await pool.query("insert into users (username, password) values ($1, $2)", [req.body.username, hashedPassword]);
-        res.redirect("/");
-    } catch (error) {
-        console.error(error);
-        next(error);
-    }
-
-
-    // res.render("", { title: "PLACEHOLDER" })
-
-});
+// POST signup (with validation middleware + controller)
+signUpRouter.post("/", validateUser, handleSignUp);
 
 module.exports = signUpRouter;

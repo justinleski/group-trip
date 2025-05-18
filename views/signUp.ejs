@@ -3,7 +3,7 @@
 		<title>GroupTrip</title>
 
 		<script src="https://cdn.tailwindcss.com"></script>
-		<link rel="stylesheet" href="/style.css">
+		<link rel="stylesheet" href="style.css" />
 	</head>
 
 	<body
@@ -11,13 +11,24 @@
 		class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8"
 	>
 		<div class="flex flex-row p-8">
-			<h1 class="text-8xl font-bold ">Group</h1>
-			<h1 class="text-8xl font-bold text-emerald-700 ">Trip</h1>
+			<h1 class="text-8xl font-bold">Group</h1>
+			<h1 class="text-8xl font-bold text-emerald-700">Trip</h1>
 		</div>
 
-		<h2>Sign-Up</h2>
+		<div class="sm:mx-auto sm:w-full sm:max-w-sm leading-8">
+			<h2 class="text-xl font-bold">Sign-Up</h2>
+			<p>
+				Have an account? <a href="sign-in" class="underline">Sign in here</a>.
+			</p>
 
-		<div class="sm:mx-auto sm:w-full sm:max-w-sm">
+			<% if (errors && errors.length > 0) { %>
+			<ul class="text-red-600 bg-red-100 p-3 rounded mt-4 mb-4">
+				<% errors.forEach(error => { %>
+				<li><%= error.msg %></li>
+				<% }) %>
+			</ul>
+			<% } %>
+
 			<form action="/sign-up" method="POST" class="flex flex-col space-y-6">
 				<label for="username">Username</label>
 				<input
@@ -25,9 +36,14 @@
 					name="username"
 					placeholder="username"
 					type="text"
+					value="<%= enteredUserName || '' %>"
 				/>
 				<label for="password">Password</label>
 				<input id="password" name="password" type="password" />
+
+				<label for="confirm-password">Confirm Password</label>
+				<input id="confirm-password" name="confirm-password" type="password" />
+
 				<button type="submit" class="">Sign Up</button>
 			</form>
 		</div>

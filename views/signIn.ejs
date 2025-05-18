@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<title>GroupTrip</title>
+
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+
+	<body
+		class="bg-gray-100 p-4"
+		class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8"
+	>
+		<div class="flex flex-row p-8">
+			<h1 class="text-8xl font-bold">Group</h1>
+			<h1 class="text-8xl font-bold text-emerald-700">Trip</h1>
+		</div>
+
+		<div class="sm:mx-auto sm:w-full sm:max-w-sm leading-8">
+			<h2 class="text-xl font-bold">Sign-In</h2>
+
+			<% if (errors && errors.length > 0) { %>
+			<ul class="text-red-600 bg-red-100 p-3 rounded mt-4 mb-4">
+				<% errors.forEach(error => { %>
+				<li><%= error.msg %></li>
+				<% }) %>
+			</ul>
+			<% } %>
+
+			<form action="/sign-in" method="POST" class="flex flex-col space-y-6">
+				<label for="username">Username</label>
+				<input
+					id="username"
+					name="username"
+					placeholder="username"
+					type="text"
+					value="<%= enteredUserName || '' %>"
+				/>
+				<label for="password">Password</label>
+				<input id="password" name="password" type="password" />
+
+				<button type="submit" class="">Sign In</button>
+			</form>
+		</div>
+	</body>
+</html>
