@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>GroupTrip - New Trip</title>
+
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="/style.css" />
+	</head>
+
+	<body
+		class="bg-gray-100 p-4 flex min-h-full flex-col justify-center px-6 py-12 lg:px-8"
+	>
+		<div class="flex flex-row p-8">
+			<h1 class="text-8xl font-bold">Group</h1>
+			<h1 class="text-8xl font-bold text-emerald-700">Trip</h1>
+		</div>
+
+		<div class="sm:mx-auto sm:w-full sm:max-w-sm leading-8">
+			<h2 class="text-xl font-bold mb-2">Create a New Trip</h2>
+			<p class="mb-4 text-sm text-gray-600">
+				Want to view existing trips?
+				<a href="/trip-overview" class="underline">Go here</a>.
+			</p>
+
+			<% if (errors && errors.length > 0) { %>
+			<ul class="text-red-600 bg-red-100 p-3 rounded mt-4 mb-4">
+				<% errors.forEach(error => { %>
+				<li><%= error.msg %></li>
+				<% }) %>
+			</ul>
+			<% } %>
+
+			<form
+				action="/trip-overview"
+				method="POST"
+				class="flex flex-col space-y-6"
+			>
+				<label for="tripName">Trip Name</label>
+				<input
+					id="tripName"
+					name="tripName"
+					placeholder="e.g., Montreal Weekend"
+					type="text"
+					value="<%= enteredTripName || '' %>"
+					class="rounded p-2 border border-gray-300"
+					required
+				/>
+
+				<button
+					type="submit"
+					class="text-white bg-emerald-700 hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
+				>
+					Create Trip
+				</button>
+			</form>
+		</div>
+	</body>
+</html>

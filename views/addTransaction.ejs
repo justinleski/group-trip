@@ -1,0 +1,133 @@
+<html>
+	<head>
+		<title>Add Transaction</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+
+	<body class="bg-gray-100 min-h-screen flex flex-col px-4 py-8">
+		<!-- Header -->
+		<header class="mb-6">
+			<h1 class="text-3xl font-bold text-emerald-700">Add Transaction</h1>
+			<p class="text-gray-600">Customize who owes what.</p>
+		</header>
+
+		<!-- Form -->
+		<form
+			action="/trip-overview/<%= tripId %>/add-transaction"
+			method="POST"
+			class="space-y-6 bg-white p-6 rounded shadow max-w-2xl w-full"
+		>
+			<!-- Transaction Name -->
+			<div>
+				<label for="name" class="block text-sm font-medium text-gray-700"
+					>Transaction Name</label
+				>
+				<input
+					type="text"
+					name="name"
+					id="name"
+					class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+					placeholder="e.g. Groceries"
+					required
+				/>
+			</div>
+
+			<!-- Total Amount -->
+			<div>
+				<label for="amount" class="block text-sm font-medium text-gray-700"
+					>Total Amount</label
+				>
+				<input
+					type="number"
+					name="amount"
+					id="amount"
+					class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+					step="0.01"
+					required
+				/>
+			</div>
+
+			<!-- Payer Dropdown -->
+			<div>
+				<label for="payer" class="block text-sm font-medium text-gray-700"
+					>Who Paid?</label
+				>
+				<select
+					id="payer"
+					name="payer"
+					class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+					required
+				>
+					<option value="">Select a payer</option>
+					<% participants.forEach(user => { %>
+					<option value="<%= user.id %>"><%= user.username %></option>
+					<% }) %>
+				</select>
+			</div>
+
+			<!-- Custom Owes Inputs -->
+			<div>
+				<p class="text-sm font-medium text-gray-700 mb-2">Split Amounts:</p>
+				<div class="space-y-2">
+					<% participants.forEach(user => { %>
+					<div class="flex items-center space-x-2">
+						<label class="w-1/2 text-gray-700"><%= user.username %></label>
+						<input
+							type="number"
+							name="owes[<%= user.id %>]"
+							data-user-id="<%= user.id %>"
+							placeholder="0.00"
+							step="0.01"
+							class="w-1/2 border border-gray-300 rounded-md p-2"
+						/>
+					</div>
+					<% }) %>
+				</div>
+			</div>
+
+			<!-- Submit -->
+			<button
+				type="button"
+				id="splitEvenlyBtn"
+				class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full text-sm px-5 py-2.5"
+			>
+				🔀 Split Evenly
+			</button>
+
+			<button
+				type="submit"
+				class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-medium rounded-full text-sm px-5 py-2.5"
+			>
+				💾 Save Transaction
+			</button>
+		</form>
+
+		<a
+			href="/trip-overview/<%= tripId %>"
+			class="mt-6 inline-block text-emerald-700 underline"
+			>← Back to Trip</a
+		>
+	</body>
+
+	<script>
+		document
+			.getElementById("splitEvenlyBtn")
+			.addEventListener("click", function () {
+				const amountInput = document.getElementById("amount");
+				const total = parseFloat(amountInput.value);
+
+				if (isNaN(total) || total <= 0) {
+					alert("Please enter a valid total amount first.");
+					return;
+				}
+
+				const owesInputs = document.querySelectorAll("input[name^='owes']");
+				const numPeople = owesInputs.length;
+				const evenAmount = (total / numPeople).toFixed(2);
+
+				owesInputs.forEach((input) => {
+					input.value = evenAmount;
+				});
+			});
+	</script>
+</html>

@@ -31,18 +31,19 @@ CREATE TABLE IF NOT EXISTS trip_participants (
 
 CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    amount INTEGER NOT NULL,
+    amount NUMERIC(10, 2) NOT NULL,
     name VARCHAR( 255 ) NOT NULL,
     shared BOOLEAN,
     paid_off BOOLEAN DEFAULT false,
-    trip_id INT REFERENCES trips(id) ON DELETE CASCADE
+    trip_id INT REFERENCES trips(id) ON DELETE CASCADE,
+    payer_id INT REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS transaction_shares (
     transaction_id INT REFERENCES transactions(id) ON DELETE CASCADE,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    amount_paid INTEGER DEFAULT 0,
-    amount_owed INTEGER DEFAULT 0,
+    amount_paid NUMERIC(10, 2) DEFAULT 0,
+    amount_owed NUMERIC(10, 2) DEFAULT 0,
     PRIMARY KEY (transaction_id, user_id)
 );
 `;

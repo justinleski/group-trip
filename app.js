@@ -4,21 +4,24 @@ const app = express();
 const pool = require("./db/pool");
 const session = require("express-session");
 const passport = require("passport");
+const bcrypt = require("bcryptjs");
 const LocalStrategy = require("passport-local").Strategy;
 
 passport.use(
 	new LocalStrategy(async (username, password, done) => {
 		try {
+			const lowerUsername = username.toLowerCase();
 			const { rows } = await pool.query(
 				"SELECT * FROM users WHERE username = $1",
-				[username]
+				[lowerUsername]
 			);
 			const user = rows[0];
 
 			if (!user) {
 				return done(null, false, { message: "Incorrect username" });
 			}
-			if (user.password !== password) {
+			const isMatch = await bcrypt.compare(password, user.password);
+			if (!isMatch) {
 				return done(null, false, { message: "Incorrect password" });
 			}
 			return done(null, user);
@@ -59,6 +62,7 @@ const signUpRouter = require("./routes/signUpRouter");
 const signInRouter = require("./routes/signInRouter");
 const signOutRouter = require("./routes/signOutRouter");
 const accountRouter = require("./routes/accountRouter");
+const tripOverviewRouter = require("./routes/tripOverviewRouter");
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -82,6 +86,7 @@ app.use("/sign-up", signUpRouter);
 app.use("/sign-in", signInRouter);
 app.use("/sign-out", signOutRouter);
 app.use("/account", accountRouter);
+app.use("/trip-overview", tripOverviewRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
