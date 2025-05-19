@@ -19,9 +19,7 @@
 		>
 			<!-- Transaction Name -->
 			<div>
-				<label for="name" class="block text-sm font-medium text-gray-700"
-					>Transaction Name</label
-				>
+				<label for="name" class="block text-sm font-medium text-gray-700">Transaction Name</label>
 				<input
 					type="text"
 					name="name"
@@ -34,9 +32,7 @@
 
 			<!-- Total Amount -->
 			<div>
-				<label for="amount" class="block text-sm font-medium text-gray-700"
-					>Total Amount</label
-				>
+				<label for="amount" class="block text-sm font-medium text-gray-700">Total Amount</label>
 				<input
 					type="number"
 					name="amount"
@@ -49,15 +45,8 @@
 
 			<!-- Payer Dropdown -->
 			<div>
-				<label for="payer" class="block text-sm font-medium text-gray-700"
-					>Who Paid?</label
-				>
-				<select
-					id="payer"
-					name="payer"
-					class="mt-1 block w-full border border-gray-300 rounded-md p-2"
-					required
-				>
+				<label for="payer" class="block text-sm font-medium text-gray-700">Who Paid?</label>
+				<select id="payer" name="payer" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
 					<option value="">Select a payer</option>
 					<% participants.forEach(user => { %>
 					<option value="<%= user.id %>"><%= user.username %></option>
@@ -102,32 +91,26 @@
 			</button>
 		</form>
 
-		<a
-			href="/trip-overview/<%= tripId %>"
-			class="mt-6 inline-block text-emerald-700 underline"
-			>← Back to Trip</a
-		>
+		<a href="/trip-overview/<%= tripId %>" class="mt-6 inline-block text-emerald-700 underline">← Back to Trip</a>
 	</body>
 
 	<script>
-		document
-			.getElementById("splitEvenlyBtn")
-			.addEventListener("click", function () {
-				const amountInput = document.getElementById("amount");
-				const total = parseFloat(amountInput.value);
+		document.getElementById("splitEvenlyBtn").addEventListener("click", function () {
+			const amountInput = document.getElementById("amount");
+			const total = parseFloat(amountInput.value);
 
-				if (isNaN(total) || total <= 0) {
-					alert("Please enter a valid total amount first.");
-					return;
-				}
+			if (isNaN(total) || total <= 0) {
+				alert("Please enter a valid total amount first.");
+				return;
+			}
 
-				const owesInputs = document.querySelectorAll("input[name^='owes']");
-				const numPeople = owesInputs.length;
-				const evenAmount = (total / numPeople).toFixed(2);
+			const owesInputs = document.querySelectorAll("input[name^='owes']");
+			const numPeople = owesInputs.length;
+			const evenAmount = (total / numPeople).toFixed(2);
 
-				owesInputs.forEach((input) => {
-					input.value = evenAmount;
-				});
+			owesInputs.forEach((input) => {
+				input.value = evenAmount;
 			});
+		});
 	</script>
 </html>

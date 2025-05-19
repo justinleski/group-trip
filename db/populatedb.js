@@ -46,6 +46,15 @@ CREATE TABLE IF NOT EXISTS transaction_shares (
     amount_owed NUMERIC(10, 2) DEFAULT 0,
     PRIMARY KEY (transaction_id, user_id)
 );
+
+CREATE TABLE IF NOT EXISTS trip_invites (
+    id SERIAL PRIMARY KEY,
+    trip_id INT REFERENCES trips(id) ON DELETE CASCADE,
+    token UUID UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP DEFAULT (NOW() + INTERVAL '1 day')
+);
+
 `;
 
 async function main() {

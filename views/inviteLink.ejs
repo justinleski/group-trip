@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<title>GroupTrip</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="/style.css" />
+	</head>
+
+	<body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+		<div class="bg-white p-6 rounded-xl shadow-md max-w-lg w-full">
+			<!-- Back link -->
+			<a
+				href="/trip-overview"
+				class="text-sm text-emerald-600 hover:underline mb-4 inline-block"
+			>
+				← Back to Trip Overview
+			</a>
+
+			<!-- Title -->
+			<h2 class="text-2xl font-bold text-gray-800 mb-2">Share this link</h2>
+			<p class="text-gray-600 text-sm mb-4">
+				Copy the invite link below and send it to a friend to join your trip.
+			</p>
+
+			<!-- Input + button -->
+			<div class="flex gap-2">
+				<input
+					id="inviteInput"
+					type="text"
+					value="<%= inviteLink %>"
+					readonly
+					class="flex-1 border border-gray-300 px-4 py-2 rounded-md text-sm text-gray-700 bg-gray-50"
+				/>
+				<button
+					onclick="copyInviteLink()"
+					class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-md"
+				>
+					Copy
+				</button>
+			</div>
+
+			<!-- Copied message -->
+			<p id="copyMsg" class="text-xs text-green-600 mt-2 hidden">
+				Copied to clipboard ✅
+			</p>
+		</div>
+
+		<script>
+			function copyInviteLink() {
+				const input = document.getElementById("inviteInput");
+				input.select();
+				input.setSelectionRange(0, 99999);
+				document.execCommand("copy");
+
+				const msg = document.getElementById("copyMsg");
+				msg.classList.remove("hidden");
+				setTimeout(() => msg.classList.add("hidden"), 2000);
+			}
+		</script>
+	</body>
+</html>

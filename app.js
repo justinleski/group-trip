@@ -63,6 +63,7 @@ const signInRouter = require("./routes/signInRouter");
 const signOutRouter = require("./routes/signOutRouter");
 const accountRouter = require("./routes/accountRouter");
 const tripOverviewRouter = require("./routes/tripOverviewRouter");
+const inviteRouter = require("./routes/inviteRouter");
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -87,6 +88,7 @@ app.use("/sign-in", signInRouter);
 app.use("/sign-out", signOutRouter);
 app.use("/account", accountRouter);
 app.use("/trip-overview", tripOverviewRouter);
+app.use("/invite", inviteRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

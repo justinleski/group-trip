@@ -28,17 +28,11 @@ async function handleCreateTrip(req, res) {
 
 	try {
 		// 1. Insert into trips
-		const result = await pool.query(
-			`INSERT INTO trips (name) VALUES ($1) RETURNING id`,
-			[tripName]
-		);
+		const result = await pool.query(`INSERT INTO trips (name) VALUES ($1) RETURNING id`, [tripName]);
 		const tripId = result.rows[0].id;
 
 		// 2. Add current user as participant
-		await pool.query(
-			`INSERT INTO trip_participants (user_id, trip_id) VALUES ($1, $2)`,
-			[req.user.id, tripId]
-		);
+		await pool.query(`INSERT INTO trip_participants (user_id, trip_id) VALUES ($1, $2)`, [req.user.id, tripId]);
 
 		// 3. Redirect to overview
 		res.redirect("/trip-overview");
@@ -50,16 +44,19 @@ async function handleCreateTrip(req, res) {
 
 async function renderTripDetails(req, res) {
 	const { tripId } = req.params;
+	const userId = req.user.id;
 
-	const accessCheck = await pool.query(
-		`SELECT * FROM trip_participants WHERE trip_id = $1 AND user_id = $2`,
-		[tripId, req.user.id]
-	);
+	// Make sure user is part of this trip
+	const accessCheck = await pool.query(`SELECT 1 FROM trip_participants WHERE trip_id = $1 AND user_id = $2`, [
+		tripId,
+		userId,
+	]);
 	if (accessCheck.rowCount === 0) {
 		return res.status(403).send("You are not part of this trip.");
 	}
 
-	const { rows: transactions } = await pool.query(
+	// Get transactions with payer username
+	const { rows: rawTransactions } = await pool.query(
 		`
 		SELECT t.id, t.name, t.amount, t.paid_off, u.username AS payer
 		FROM transactions t
@@ -68,6 +65,32 @@ async function renderTripDetails(req, res) {
 		ORDER BY t.id DESC;
 		`,
 		[tripId]
+	);
+
+	// For each transaction, get how much the logged-in user owes and has paid
+	const transactions = await Promise.all(
+		rawTransactions.map(async (tx) => {
+			const result = await pool.query(
+				`
+				SELECT amount_owed, amount_paid
+				FROM transaction_shares
+				WHERE transaction_id = $1 AND user_id = $2
+				`,
+				[tx.id, userId]
+			);
+
+			const share = result.rows[0];
+			const userOwes = parseFloat(share?.amount_owed || 0);
+			const userPaid = parseFloat(share?.amount_paid || 0);
+			const remaining = Math.max(userOwes - userPaid, 0);
+
+			return {
+				...tx,
+				userOwes,
+				userPaid,
+				remaining,
+			};
+		})
 	);
 
 	res.render("tripDetails", {
@@ -121,10 +144,10 @@ async function renderAddTransactionForm(req, res) {
 	const { tripId } = req.params;
 
 	// optional: check if user is in the trip
-	const accessCheck = await pool.query(
-		`SELECT * FROM trip_participants WHERE trip_id = $1 AND user_id = $2`,
-		[tripId, req.user.id]
-	);
+	const accessCheck = await pool.query(`SELECT * FROM trip_participants WHERE trip_id = $1 AND user_id = $2`, [
+		tripId,
+		req.user.id,
+	]);
 	if (accessCheck.rowCount === 0) {
 		return res.status(403).send("You are not part of this trip.");
 	}
