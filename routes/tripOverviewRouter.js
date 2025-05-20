@@ -7,6 +7,7 @@ const {
 	renderTripDetails,
 	handleAddTransaction,
 	renderAddTransactionForm,
+	handlePayment,
 } = require("../controllers/tripOverviewController");
 
 //gets
@@ -18,5 +19,6 @@ tripOverviewRouter.get("/:tripId/add-transaction", renderAddTransactionForm);
 // posts
 tripOverviewRouter.post("/", handleCreateTrip);
 tripOverviewRouter.post("/:tripId/add-transaction", handleAddTransaction);
+tripOverviewRouter.post("/:tripId/pay/:transactionId", handlePayment);
 
 module.exports = tripOverviewRouter;

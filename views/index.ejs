@@ -1,29 +1,44 @@
 <html>
 	<head>
 		<title>GroupTrip</title>
-
 		<script src="https://cdn.tailwindcss.com"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="/style.css" />
 	</head>
+	<body class="bg-gray-50 text-gray-800 animated-gradient-bg">
+		<main class="min-h-screen flex flex-col justify-center items-center px-6 text-center">
+			<header class="mb-12">
+				<h1 class="text-6xl md:text-7xl font-extrabold leading-tight">
+					Group<span class="trip-hover-gradient">Trip</span>
+				</h1>
+				<p class="mt-4 text-lg text-gray-600 max-w-md mx-auto">
+					Get your group trip out the group chat — track expenses, split costs, and settle up with friends.
+				</p>
+			</header>
 
-	<body class="bg-gray-100 p-4">
-		<div class="flex flex-col items-center justify-center">
-			<div class="flex flex-row p-8">
-				<h1 class="text-8xl font-bold">Group</h1>
-				<h1 class="text-8xl font-bold text-emerald-700">Trip</h1>
+			<div class="mb-8">
+				<a href="<%= user ? '/account' : '/sign-up' %>">
+					<button
+						class="px-6 py-3 rounded-full text-white text-sm font-medium bg-emerald-600 hover:bg-emerald-700 shadow-md"
+					>
+						Get Started Free
+					</button>
+				</a>
+				<p class="mt-2 text-sm text-gray-400">No credit card required</p>
 			</div>
 
-			<p class="text-sm text-gray-600 p-2">
-				Get the group trip out the group chat
-			</p>
+			<section class="bg-white shadow-lg rounded-xl p-6 w-full max-w-2xl border border-gray-200">
+				<h2 class="text-xl font-semibold mb-4">How it Works</h2>
+				<ul class="text-left text-gray-700 space-y-3">
+					<li>✅ Create a trip and invite friends</li>
+					<li>✅ Add expenses and who paid what</li>
+					<li>✅ Instantly split costs and settle up</li>
+				</ul>
+			</section>
 
-			<a href="<%= user ? '/account' : '/sign-up' %>">
-				<button
-					class="text-white bg-emerald-700 hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
-				>
-					Get Started
-				</button>
-			</a>
-		</div>
+			<footer class="mt-12 text-sm text-gray-400">
+				&copy; <%= new Date().getFullYear() %> GroupTrip. All rights reserved.
+			</footer>
+		</main>
 	</body>
 </html>

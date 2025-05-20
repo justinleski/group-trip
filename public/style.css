@@ -1,0 +1,86 @@
+/*
+  resets
+*/
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+* {
+	margin: 0;
+}
+body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+img, picture, video, canvas, svg {
+	display: block;
+	max-width: 100%;
+}
+input, button, textarea, select {
+	font: inherit;
+}
+p, h1, h2, h3, h4, h5, h6 {
+	overflow-wrap: break-word;
+}
+#root, #__next {
+	isolation: isolate;
+}
+
+/*----------------*/
+.animated-gradient-bg {
+	background: linear-gradient(
+		120deg,
+		#e6f4ea,   
+		#d1fae5,   
+		#f0fdf4,   
+		#f0fdfa    
+	);
+	background-size: 300% 300%;
+	animation: softFade 12s ease infinite;
+}
+
+.trip-hover-gradient {
+	background: linear-gradient(90deg, #10b981, #34d399, #10b981); 
+	background-size: 200% 100%;
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	transition: background-position 0.5s ease;
+}
+
+.trip-hover-gradient:hover {
+	background-position: 100% 0;
+}
+
+
+@keyframes softFade {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* Underline link on hover */
+.link-underline-hover {
+	position: relative;
+	display: inline-block;
+}
+
+.link-underline-hover::after {
+	content: "";
+	position: absolute;
+	width: 0%;
+	left: 0;
+	bottom: 0;
+	height: 2px;
+	background-color: currentColor;
+	transition: width 0.3s ease;
+}
+
+.link-underline-hover:hover::after {
+	width: 100%;
+}

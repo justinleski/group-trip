@@ -1,6 +1,5 @@
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
-// const pool = require("../db/pool");
 const passport = require("passport");
 
 renderSignInForm = (req, res) => {
@@ -23,7 +22,7 @@ handleSignIn = async (req, res, next) => {
 		}
 		req.logIn(user, (err) => {
 			if (err) return next(err);
-			return res.redirect("/account");
+			return res.redirect("/trip-overview");
 		});
 	})(req, res, next);
 };

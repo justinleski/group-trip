@@ -11,10 +11,7 @@ passport.use(
 	new LocalStrategy(async (username, password, done) => {
 		try {
 			const lowerUsername = username.toLowerCase();
-			const { rows } = await pool.query(
-				"SELECT * FROM users WHERE username = $1",
-				[lowerUsername]
-			);
+			const { rows } = await pool.query("SELECT * FROM users WHERE username = $1", [lowerUsername]);
 			const user = rows[0];
 
 			if (!user) {
@@ -37,9 +34,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
 	try {
-		const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [
-			id,
-		]);
+		const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
 		const user = rows[0];
 
 		done(null, user);
@@ -66,7 +61,7 @@ const tripOverviewRouter = require("./routes/tripOverviewRouter");
 const inviteRouter = require("./routes/inviteRouter");
 
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.static(path.join(__dirname, "public")));
 app.use(
 	session({
 		secret: "cats",

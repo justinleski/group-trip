@@ -1,57 +1,60 @@
-<html>
+<html lang="en">
 	<head>
 		<title>GroupTrip - New Trip</title>
-
 		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="/style.css" />
 	</head>
 
-	<body
-		class="bg-gray-100 p-4 flex min-h-full flex-col justify-center px-6 py-12 lg:px-8"
-	>
-		<div class="flex flex-row p-8">
-			<h1 class="text-8xl font-bold">Group</h1>
-			<h1 class="text-8xl font-bold text-emerald-700">Trip</h1>
+	<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center px-6 py-12">
+		<!-- Logo -->
+		<div class="flex flex-row items-center space-x-2 mb-12">
+			<h1 class="text-7xl md:text-8xl font-extrabold tracking-tight">Group</h1>
+			<h1 class="text-7xl md:text-8xl font-extrabold tracking-tight leading-none overflow-visible trip-hover-gradient">
+				Trip
+			</h1>
 		</div>
 
-		<div class="sm:mx-auto sm:w-full sm:max-w-sm leading-8">
-			<h2 class="text-xl font-bold mb-2">Create a New Trip</h2>
-			<p class="mb-4 text-sm text-gray-600">
+		<!-- Card -->
+		<div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md border border-gray-200">
+			<h2 class="text-2xl font-bold text-gray-800 mb-2">Create a New Trip</h2>
+			<p class="text-sm text-gray-500 mb-6">
 				Want to view existing trips?
-				<a href="/trip-overview" class="underline">Go here</a>.
+				<a href="/trip-overview" class="text-emerald-600 hover:underline font-medium">Go here</a>.
 			</p>
 
 			<% if (errors && errors.length > 0) { %>
-			<ul class="text-red-600 bg-red-100 p-3 rounded mt-4 mb-4">
+			<ul class="text-red-600 bg-red-100 p-3 rounded mb-4 space-y-1 text-sm">
 				<% errors.forEach(error => { %>
 				<li><%= error.msg %></li>
 				<% }) %>
 			</ul>
 			<% } %>
 
-			<form
-				action="/trip-overview"
-				method="POST"
-				class="flex flex-col space-y-6"
-			>
-				<label for="tripName">Trip Name</label>
-				<input
-					id="tripName"
-					name="tripName"
-					placeholder="e.g., Montreal Weekend"
-					type="text"
-					value="<%= enteredTripName || '' %>"
-					class="rounded p-2 border border-gray-300"
-					required
-				/>
+			<form action="/trip-overview" method="POST" class="flex flex-col space-y-5">
+				<div>
+					<label for="tripName" class="block text-sm font-medium text-gray-700">Trip Name</label>
+					<input
+						id="tripName"
+						name="tripName"
+						type="text"
+						placeholder="e.g., Montreal Weekend"
+						value="<%= enteredTripName || '' %>"
+						required
+						class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+					/>
+				</div>
 
 				<button
 					type="submit"
-					class="text-white bg-emerald-700 hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
+					class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-lg font-medium shadow transition duration-200"
 				>
 					Create Trip
 				</button>
 			</form>
 		</div>
+
+		<footer class="mt-8 text-xs text-gray-400 text-center">
+			&copy; <%= new Date().getFullYear() %> GroupTrip. All rights reserved.
+		</footer>
 	</body>
 </html>

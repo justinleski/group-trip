@@ -1,107 +1,111 @@
-<html>
+<html lang="en">
 	<head>
-		<title>Trip Details</title>
+		<title>Trip Details – GroupTrip</title>
 		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="/style.css" />
 	</head>
 
 	<body class="bg-gray-100 min-h-screen flex flex-col">
-		<!-- Header -->
-		<header class="bg-white shadow p-6 flex justify-between items-center">
-			<div class="flex items-center space-x-2">
-				<h1 class="text-3xl font-bold text-emerald-700">Trip Details</h1>
+		<%- include("components/nav") %>
+
+		<main class="flex-grow container mx-auto px-4 py-8">
+			<!-- Header -->
+			<div class="flex justify-between items-center mb-6">
+				<h2 class="text-2xl font-semibold text-gray-700">Trip Details</h2>
+				<a href="/trip-overview" class="text-sm text-emerald-600 link-underline-hover transition">← Back to Trips</a>
 			</div>
-			<a href="/trip-overview" class="text-sm text-gray-500 hover:text-emerald-700 underline"> ← Back to Trips </a>
-		</header>
 
-		<!-- Action Buttons -->
-		<div class="container mx-auto mt-6 px-4 flex flex-col sm:flex-row gap-4 justify-between">
-			<a href="/trip-overview/<%= tripId %>/add-transaction">
-				<button
-					class="w-full sm:w-auto text-white bg-emerald-700 hover:bg-emerald-800 font-medium rounded-lg text-sm px-5 py-2.5"
-				>
-					➕ Add Transaction
-				</button>
-			</a>
+			<!-- Action Buttons -->
+			<div class="flex flex-col sm:flex-row gap-4 justify-between mb-6">
+				<a href="/trip-overview/<%= tripId %>/add-transaction">
+					<button
+						class="w-full sm:w-auto text-white bg-emerald-700 hover:bg-emerald-800 focus:ring-4 focus:ring-emerald-300 font-medium rounded-full text-sm px-5 py-2.5 transition"
+					>
+						➕ Add Transaction
+					</button>
+				</a>
 
-			<form action="/invite/<%= tripId %>/create" method="POST">
-				<button
-					type="submit"
-					class="text-emerald-700 border border-emerald-700 hover:bg-emerald-50 font-medium rounded-lg text-sm px-5 py-2.5"
-				>
-					🔗 Create Invite Link
-				</button>
-			</form>
-		</div>
+				<form action="/invite/<%= tripId %>/create" method="POST">
+					<button
+						type="submit"
+						class="w-full sm:w-auto text-emerald-700 border border-emerald-700 hover:bg-emerald-50 font-medium rounded-full text-sm px-5 py-2.5 transition"
+					>
+						🔗 Create Invite Link
+					</button>
+				</form>
+			</div>
 
-		<!-- Transactions List -->
-		<main class="container mx-auto px-4 py-8 flex-grow">
+			<!-- Summary -->
+			<div
+				class="bg-white rounded-xl shadow p-5 mb-6 border border-gray-200 flex justify-between items-center text-sm sm:text-base"
+			>
+				<p class="text-gray-700">
+					💸 Total Spent: <span class="font-semibold text-gray-900">$<%= totalSpent.toFixed(2) %></span>
+				</p>
+				<p class="text-gray-700">
+					🧾 Still Owed: <span class="font-semibold text-rose-600">$<%= totalOwed.toFixed(2) %></span>
+				</p>
+			</div>
+
+			<!-- Transactions List -->
 			<% if (transactions.length === 0) { %>
 			<p class="text-gray-600 italic text-center">No transactions yet.</p>
 			<% } else { %>
-			<div class="space-y-4">
+			<div class="space-y-5">
 				<% transactions.forEach(tx => { %>
-				<div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
-					<div class="flex justify-between items-center">
+				<div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition border border-gray-200">
+					<div class="flex flex-col sm:flex-row justify-between items-start gap-6">
+						<!-- Transaction Info -->
 						<div>
-							<h2 class="text-xl font-semibold text-gray-800 mb-1"><%= tx.name %></h2>
+							<h3 class="text-lg font-semibold text-gray-800 mb-1"><%= tx.name %></h3>
 							<p class="text-sm text-gray-700">Amount: $<%= tx.amount %></p>
 							<p class="text-sm text-gray-700">Paid by: <%= tx.payer %></p>
-
 							<p class="text-xs text-gray-500 mt-1">
 								<%= tx.paid_off ? "✔️ Fully Paid All Users" : "❌ Not Fully Paid" %>
 							</p>
 						</div>
 
-						<!-- prettier-ignore -->
-						<div class="text-right">
-							<% if (tx.userOwes > 0) { %>
-								<% if (tx.remaining > 0) { %>
-									<p class="text-sm text-rose-600 font-medium">
-										You owe: $<%= tx.remaining.toFixed(2) %> / $<%= tx.userOwes.toFixed(2) %>
-									</p>
-								<% } else { %>
-									<p class="text-sm text-green-600 font-medium">✅ You’ve paid your share!</p>
-								<% } %>
+						<!-- Payment Status -->
+						<div class="text-right w-full sm:w-auto">
+							<% if (tx.userOwes > 0) { %> <% if (tx.remaining > 0) { %>
+							<p class="text-sm text-rose-600 font-medium mb-2">
+								You owe: $<%= tx.remaining.toFixed(2) %> / $<%= tx.userOwes.toFixed(2) %>
+							</p>
+							<% } else { %>
+							<p class="text-sm text-green-600 font-medium mb-2">✅ You’ve paid your share!</p>
+							<% } %> <% } %> <% if (tx.remaining > 0) { %>
+							<form
+								action="/trip-overview/<%= tripId %>/pay/<%= tx.id %>"
+								method="POST"
+								class="flex gap-2 justify-end mt-2"
+							>
+								<input
+									type="number"
+									name="amount"
+									step="0.01"
+									min="0.01"
+									max="<%= tx.remaining.toFixed(2) %>"
+									placeholder="Amount"
+									required
+									class="px-3 py-2 border border-gray-300 rounded-md w-24 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+								/>
+								<button
+									type="submit"
+									class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 text-sm rounded-md transition"
+								>
+									💸 Pay
+								</button>
+							</form>
 							<% } %>
 						</div>
-
-						<pre class="text-xs text-gray-400">
-							userOwes: <%= typeof tx.userOwes !== 'undefined' ? tx.userOwes : 'undefined' %>
-							remaining: <%= typeof tx.remaining !== 'undefined' ? tx.remaining : 'undefined' %>
-						</pre
-						>
 					</div>
-
-					<!-- Payment Form -->
-					<% if (tx.remaining > 0) { %>
-					<form
-						action="/trip-overview/<%= tripId %>/pay/<%= tx.id %>"
-						method="POST"
-						class="mt-4 flex flex-col sm:flex-row gap-3 items-start sm:items-center"
-					>
-						<input
-							type="number"
-							name="amount"
-							step="0.01"
-							min="0.01"
-							max="<%= tx.remaining.toFixed(2) %>"
-							placeholder="Enter amount"
-							required
-							class="px-3 py-2 border rounded-md w-36 text-sm"
-						/>
-						<button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 text-sm rounded-md">
-							💸 Pay
-						</button>
-					</form>
-					<% } %>
 				</div>
-				<% }); %>
+				<% }) %>
 			</div>
 			<% } %>
 		</main>
 
-		<!-- Footer -->
-		<footer class="bg-white text-center text-gray-400 text-sm py-4">
+		<footer class="bg-white text-center text-gray-400 text-sm py-4 border-t">
 			&copy; <%= new Date().getFullYear() %> GroupTrip. All rights reserved.
 		</footer>
 	</body>

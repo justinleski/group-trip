@@ -93,10 +93,28 @@ async function renderTripDetails(req, res) {
 		})
 	);
 
+	let totalSpent = 0;
+	let totalOwed = 0;
+
+	for (const tx of transactions) {
+		totalSpent += parseFloat(tx.amount || 0);
+
+		const res = await pool.query(
+			`SELECT SUM(amount_owed - amount_paid) AS still_owed
+		 FROM transaction_shares
+		 WHERE transaction_id = $1`,
+			[tx.id]
+		);
+
+		totalOwed += parseFloat(res.rows[0].still_owed || 0);
+	}
+
 	res.render("tripDetails", {
 		title: "Trip Transactions",
 		tripId,
 		transactions,
+		totalSpent,
+		totalOwed,
 	});
 }
 
@@ -163,6 +181,61 @@ async function renderAddTransactionForm(req, res) {
 	res.render("addTransaction", { tripId, participants });
 }
 
+async function handlePayment(req, res) {
+	try {
+		const { tripId, transactionId } = req.params;
+		const userId = req.user.id;
+		const amount = parseFloat(req.body.amount);
+
+		if (isNaN(amount) || amount <= 0) {
+			return res.status(400).send("Invalid payment amount.");
+		}
+
+		// Fetch current owed/paid status for this user
+		const { rows } = await pool.query(
+			`SELECT amount_owed, amount_paid FROM transaction_shares
+			 WHERE transaction_id = $1 AND user_id = $2`,
+			[transactionId, userId]
+		);
+
+		if (rows.length === 0) {
+			return res.status(403).send("You're not part of this transaction.");
+		}
+
+		const { amount_owed, amount_paid } = rows[0];
+		const remaining = parseFloat(amount_owed) - parseFloat(amount_paid);
+
+		if (amount > remaining) {
+			return res.status(400).send("You cannot overpay your share.");
+		}
+
+		// Update user's amount_paid
+		const newPaid = parseFloat(amount_paid) + amount;
+		await pool.query(
+			`UPDATE transaction_shares SET amount_paid = $1
+			 WHERE transaction_id = $2 AND user_id = $3`,
+			[newPaid, transactionId, userId]
+		);
+
+		// Check if the transaction is fully paid by all users
+		const result = await pool.query(
+			`SELECT SUM(amount_paid) AS paid_total, SUM(amount_owed) AS owed_total
+			 FROM transaction_shares WHERE transaction_id = $1`,
+			[transactionId]
+		);
+
+		const { paid_total, owed_total } = result.rows[0];
+		if (parseFloat(paid_total) >= parseFloat(owed_total)) {
+			await pool.query(`UPDATE transactions SET paid_off = TRUE WHERE id = $1`, [transactionId]);
+		}
+
+		res.redirect(`/trip-overview/${tripId}`);
+	} catch (err) {
+		console.error("Error processing payment:", err);
+		res.status(500).send("Server error during payment.");
+	}
+}
+
 module.exports = {
 	renderTrips,
 	renderNewForm,
@@ -170,4 +243,5 @@ module.exports = {
 	renderTripDetails,
 	handleAddTransaction,
 	renderAddTransactionForm,
+	handlePayment,
 };
