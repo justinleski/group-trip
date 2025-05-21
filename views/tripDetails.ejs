@@ -3,6 +3,7 @@
 		<title>Trip Details – GroupTrip</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="/style.css" />
+		<link rel="stylesheet" href="/bi/bootstrap-icons.css" />
 	</head>
 
 	<body class="bg-gray-100 min-h-screen flex flex-col">
@@ -21,7 +22,7 @@
 					<button
 						class="w-full sm:w-auto text-white bg-emerald-700 hover:bg-emerald-800 focus:ring-4 focus:ring-emerald-300 font-medium rounded-full text-sm px-5 py-2.5 transition"
 					>
-						➕ Add Transaction
+						<i class="bi bi-plus fs-1"></i>Add Transaction
 					</button>
 				</a>
 
@@ -30,21 +31,33 @@
 						type="submit"
 						class="w-full sm:w-auto text-emerald-700 border border-emerald-700 hover:bg-emerald-50 font-medium rounded-full text-sm px-5 py-2.5 transition"
 					>
-						🔗 Create Invite Link
+						<i class="bi bi-link-45deg"></i> Create Invite Link
 					</button>
 				</form>
 			</div>
 
 			<!-- Summary -->
-			<div
-				class="bg-white rounded-xl shadow p-5 mb-6 border border-gray-200 flex justify-between items-center text-sm sm:text-base"
-			>
-				<p class="text-gray-700">
-					💸 Total Spent: <span class="font-semibold text-gray-900">$<%= totalSpent.toFixed(2) %></span>
-				</p>
-				<p class="text-gray-700">
-					🧾 Still Owed: <span class="font-semibold text-rose-600">$<%= totalOwed.toFixed(2) %></span>
-				</p>
+			<div class="bg-white grid grid-cols-3 rounded-xl shadow p-5 mb-6 border border-gray-200">
+				<div class="col-span-2">
+					<h1 class="text-4xl font-semibold leading-loose"><%= tripName %></h1>
+
+					<div class="flex text-gray-500">
+						<% participants.forEach((p, index) => { %>
+						<p><%= p.username %><%= index < participants.length - 1 ? ',\u00A0' : ''%></p>
+						<% }) %>
+					</div>
+				</div>
+
+				<div class="col-span-1 flex flex-col justify-around items-center text-sm sm:text-base">
+					<p class="text-gray-700">
+						<i class="bi bi-cash-stack"></i> Total Spent:
+						<span class="font-semibold text-gray-900">$<%= totalSpent.toFixed(2) %></span>
+					</p>
+					<p class="text-gray-700">
+						<i class="bi bi-piggy-bank-fill"></i> Still Owed:
+						<span class="font-semibold text-rose-600">$<%= totalOwed.toFixed(2) %></span>
+					</p>
+				</div>
 			</div>
 
 			<!-- Transactions List -->
@@ -60,8 +73,11 @@
 							<h3 class="text-lg font-semibold text-gray-800 mb-1"><%= tx.name %></h3>
 							<p class="text-sm text-gray-700">Amount: $<%= tx.amount %></p>
 							<p class="text-sm text-gray-700">Paid by: <%= tx.payer %></p>
+							<!-- prettier-ignore -->
 							<p class="text-xs text-gray-500 mt-1">
-								<%= tx.paid_off ? "✔️ Fully Paid All Users" : "❌ Not Fully Paid" %>
+								<%- tx.paid_off
+								? '<i class="bi bi-check-lg"></i> Fully Paid By All Users'
+								: '<i class="bi bi-x-lg"></i> Not Fully Paid' %>
 							</p>
 						</div>
 
@@ -72,7 +88,9 @@
 								You owe: $<%= tx.remaining.toFixed(2) %> / $<%= tx.userOwes.toFixed(2) %>
 							</p>
 							<% } else { %>
-							<p class="text-sm text-green-600 font-medium mb-2">✅ You’ve paid your share!</p>
+							<p class="text-sm text-green-600 font-medium mb-2">
+								<i class="bi bi-check-lg"></i> You’ve paid your share!
+							</p>
 							<% } %> <% } %> <% if (tx.remaining > 0) { %>
 							<form
 								action="/trip-overview/<%= tripId %>/pay/<%= tx.id %>"
@@ -93,7 +111,7 @@
 									type="submit"
 									class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 text-sm rounded-md transition"
 								>
-									💸 Pay
+									<i class="bi bi-wallet2"></i> Pay
 								</button>
 							</form>
 							<% } %>

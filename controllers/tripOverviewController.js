@@ -55,6 +55,20 @@ async function renderTripDetails(req, res) {
 		return res.status(403).send("You are not part of this trip.");
 	}
 
+	// Get trip name to display to users
+	const tripQuery = await pool.query(`SELECT name FROM trips WHERE id = $1`, [tripId]);
+	const tripName = tripQuery.rows[0].name;
+
+	// get name of all people going based on tripId'
+	const { rows: participants } = await pool.query(
+		`SELECT u.id, u.username
+		FROM trip_participants tp
+		JOIN users u ON tp.user_id = u.id
+		WHERE tp.trip_id = $1;
+		`,
+		[tripId]
+	);
+
 	// Get transactions with payer username
 	const { rows: rawTransactions } = await pool.query(
 		`
@@ -101,8 +115,8 @@ async function renderTripDetails(req, res) {
 
 		const res = await pool.query(
 			`SELECT SUM(amount_owed - amount_paid) AS still_owed
-		 FROM transaction_shares
-		 WHERE transaction_id = $1`,
+		 	FROM transaction_shares
+		 	WHERE transaction_id = $1`,
 			[tx.id]
 		);
 
@@ -115,6 +129,8 @@ async function renderTripDetails(req, res) {
 		transactions,
 		totalSpent,
 		totalOwed,
+		tripName,
+		participants,
 	});
 }
 

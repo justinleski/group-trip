@@ -69,6 +69,7 @@ app.use(
 		saveUninitialized: false,
 	})
 );
+app.use("/bi", express.static(__dirname + "/node_modules/bootstrap-icons/font"));
 
 app.use(passport.initialize());
 app.use(passport.session());
