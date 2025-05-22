@@ -1,1 +1,24 @@
 # group-trip
+### Purpose
+This is a finance-splitting app. After travelling to Iceland with friends last Summer, coming back, I had a major problem. We had to sit on a spreadsheet with our notes app and receipts to figure who owes who. This took quite a bit a of work thus inspiring me to make GroupTrip.
+
+### Demo
+I plan on putting this up on Render.com very soon! Just ironing out a few bugs as Express is being silly (it's probably me).
+
+### Challenges Faced
+#### Routers and Controllers
+- This was by far the most complex app I've done. While I didn't understand why frameworks like React have gained a lot of traction, working with MVC and EJS has given me an understanding of why many devs opt for Client-side rendering.
+- My app is not the best organized in all honesty; but I think it given me an understanding of the purpose of routing and I can see mistakes on both ends of the spectrum.
+    - I created too many routes for the sign in/out/up flow were not necessary.
+    - Contrarily, I created too little routes for the trip overview and planning page. This has made the router and controller for the tripOverview much more cluttered than they need to be.
+
+#### UI
+- I realized that working with MVC made me think a little more on what needs to be a new page. With React being built out of components on a typically single-view app, it was a bit jarring to have to make so many views which made organizing the page structure difficult.
+
+#### EJS
+- Going back SSR vs CSR, I think I have learned I have a strong preference for SSR due to how compact it is.
+    - Visually, navigating through multiples views on EJS and determining how to pass variables to each view consumed a lot of mental bandwidth.
+
+### Future Improvements
+- If I were to improve the structure of this codebase, I'd honestly go for a framework like React. Despite the bulk it may carry in terms of render times, I think it is worth it. But maybe I speak too much as a dev here.
+- I would organize the flow a bit better of the app, perhaps expand on the friends feature as my DB has a friends table. But maybe also keeping them in the trip suffices?
