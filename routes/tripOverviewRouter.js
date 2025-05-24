@@ -20,6 +20,5 @@ tripOverviewRouter.get("/:tripId/add-transaction", renderAddTransactionForm);
 tripOverviewRouter.post("/", handleCreateTrip);
 tripOverviewRouter.post("/:tripId/add-transaction", handleAddTransaction);
 tripOverviewRouter.post("/:tripId/pay/:transactionId", handlePayment);
-tripOverviewRouter.post("/:tripId/add-transaction", renderTrips);
 
 module.exports = tripOverviewRouter;

@@ -153,10 +153,16 @@ async function handleAddTransaction(req, res) {
 		);
 		const transactionId = result.rows[0].id;
 
-		// Insert shares
-		const shareInserts = Object.entries(owes).map(([userId, owedAmount]) => {
+		// Insert shares FIXME: here is the table with issues
+		const shareInserts = Object.entries(owes).map(([uidKey, owedAmount]) => {
 			const amt = parseFloat(owedAmount);
 			if (isNaN(amt) || amt <= 0) return null;
+
+			// had to update EJS to insert 'u' char otherwise parsed as array by express not object
+			const userId = uidKey.replace("u", "");
+
+			// skip the payer on the backend since we dont want them to owe anything
+			if (userId === payer) return null;
 
 			return pool.query(
 				`INSERT INTO transaction_shares (transaction_id, user_id, amount_owed)

@@ -17,7 +17,7 @@ I plan on putting this up on Render.com very soon! Just ironing out a few bugs a
 
 #### EJS
 - Going back SSR vs CSR, I think I have learned I have a strong preference for SSR due to how compact it is.
-    - Visually, navigating through multiples views on EJS and determining how to pass variables to each view consumed a lot of mental bandwidth.
+    - Visually, navigating through multiple views on EJS and determining how to pass variables to each view consumed a lot of mental bandwidth.
 
 ### Future Improvements
 - If I were to improve the structure of this codebase, I'd honestly go for a framework like React. Despite the bulk it may carry in terms of render times, I think it is worth it. But maybe I speak too much as a dev here.
