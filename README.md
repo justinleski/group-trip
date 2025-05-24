@@ -3,7 +3,7 @@
 This is a finance-splitting app. After travelling to Iceland with friends last Summer, coming back, I had a major problem. We had to sit on a spreadsheet with our notes app and receipts to figure who owes who. This took quite a bit a of work thus inspiring me to make GroupTrip.
 
 ### Demo
-I plan on putting this up on Render.com very soon! Just ironing out a few bugs as Express is being silly (it's probably me).
+A live demo can be found (here on Render)[https://group-trip.onrender.com/]. The DB is hosted on Supabase.
 
 ### Challenges Faced
 #### Routers and Controllers
