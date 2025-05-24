@@ -19,6 +19,10 @@ I plan on putting this up on Render.com very soon! Just ironing out a few bugs a
 - Going back SSR vs CSR, I think I have learned I have a strong preference for SSR due to how compact it is.
     - Visually, navigating through multiple views on EJS and determining how to pass variables to each view consumed a lot of mental bandwidth.
 
+#### Express
+- Express apparently will look at numeric keys passed in and assume it is an array. Due to me using autoincrement for user IDs, if we had `UID = 1` and `UID = 2` sharing a transaction, if `1` paid for both themselves and user `2`, it would show user `1` as having to pay meanwhile the owing would be assigned to another non-existant user.
+    - To fix this, on the front-end, I had to append the character `u` to the form field so when `owes` was parsed it parsed it as an object allowing me to properly index in to the according owing (after stripping the `u` in the controller).
+
 ### Future Improvements
 - If I were to improve the structure of this codebase, I'd honestly go for a framework like React. Despite the bulk it may carry in terms of render times, I think it is worth it. But maybe I speak too much as a dev here.
 - I would organize the flow a bit better of the app, perhaps expand on the friends feature as my DB has a friends table. But maybe also keeping them in the trip suffices?
