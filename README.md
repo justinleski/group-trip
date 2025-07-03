@@ -5,6 +5,9 @@ This is a finance-splitting app. After travelling to Iceland with friends last S
 ### Demo
 ![Demo](public/groupTripDemo2.gif) <br>
 
+> [!IMPORTANT]  
+> Due to the project being hosted on Supabase, the project can "wound down." If the demo is not functional it is due to this, not error in the code.
+
 A live demo can be found [here on Render](https://group-trip.onrender.com/). The DB is hosted on Supabase.
 
 ### Challenges Faced
